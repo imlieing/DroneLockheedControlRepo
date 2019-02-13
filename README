@@ -1,0 +1,3 @@
+We have a custom launch file.
+To use it, add it to the catkin_ws/src/flightoggles/flightgoggles/launch directory
+Then run it with the command roslaunch flightgoggles theAggregate.launch
