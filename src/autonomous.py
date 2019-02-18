@@ -22,41 +22,12 @@ class autonomous():
         msg.header.frame_id = "uav/imu"
         msg.header.stamp = Time.now()
 
-        msg.thrust.z = self.idleThrust + 5;
-        msg.angular_rates.x = 15
-        msg.angular_rates.y = 15
-        msg.angular_rates.z = 15
+        msg.thrust.z = self.idleThrust + 1;
+        msg.angular_rates.x = 0.05
+        msg.angular_rates.y = 0.05
+        msg.angular_rates.z = 0.05
 
         self.pub_vel.publish(msg)
-#     float pitch = last_joy_msg.axes[joy_axes["pitch"]];
-#     float roll = -last_joy_msg.axes[joy_axes["roll"]];
-#     float yaw = last_joy_msg.axes[joy_axes["yaw"]];
-#     float vertical = last_joy_msg.axes[joy_axes["vertical"]];
-#
-#     /* check deadzones */
-# //    if (std::abs(pitch) < joy_deadzones["pitch"]) pitch = 0;
-# //    if (std::abs(yaw) < joy_deadzones["yaw"]) yaw = 0;
-# //    if (std::abs(roll) < joy_deadzones["roll"]) roll = 0;
-# //    if (std::abs(vertical) < joy_deadzones["vertical"]) vertical = 0;
-#
-#     msg.angular_rates.y = std::pow(pitch,3.0f) * axis_scales["pitch"];
-#     msg.angular_rates.x = std::pow(roll, 3.0f) * axis_scales["roll"];
-#     msg.angular_rates.z = std::pow(yaw,3.0f) * axis_scales["yaw"];
-#     msg.thrust.z = std::pow(vertical, 3.0f) * axis_scales["vertical"] + idleThrust;
-#
-#   }
-#   else if (key_override_enabled) {
-#     msg.angular_rates.y = key_axes_state["pitch"] * axis_scales["pitch"];
-#     msg.angular_rates.x = key_axes_state["roll"] * axis_scales["roll"];
-#     msg.angular_rates.z = key_axes_state["yaw"] * axis_scales["yaw"];
-#     msg.thrust.z = key_axes_state["vertical"] * axis_scales["vertical"] + idleThrust;
-#   }
-#     // Publish message.
-#     // Might be an empty message if there is no override enabled.
-#     pub_vel.publish(msg);
-#
-
-
 
 if __name__ == '__main__':
     rospy.init_node('hurrdeedurr')
