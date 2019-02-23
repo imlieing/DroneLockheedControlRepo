@@ -18,13 +18,14 @@ class autonomous():
         self.beginning_time = rospy.get_time()
         self.idle_thrust = float(9.81)
 
-        self.path_sub = message_filters.Subscriber('/pathplanning/input/rateThrust', RateThrust)
-        self.imu_sub = message_filters.Subscriber("/uav/sensors/imu", Imu)
+        #commented out because it will be moved to the pid node
+        #self.path_sub = message_filters.Subscriber('/pathplanning/input/rateThrust', RateThrust)
+        #self.imu_sub = message_filters.Subscriber("/uav/sensors/imu", Imu)
         self.height_sub_SYNCED = message_filters.Subscriber("/uav/sensors/downward_laser_rangefinder", Range)
         self.height_sub_UNSYNCED = rospy.Subscriber("/uav/sensors/downward_laser_rangefinder", Range, self.checkHeightCallback)
 
-        ts = message_filters.ApproximateTimeSynchronizer([self.path_sub, self.imu_sub, self.height_sub_SYNCED], 10, 0.1, allow_headerless=True)
-        ts.registerCallback(self.callback)
+        #ts = message_filters.ApproximateTimeSynchronizer([self.path_sub, self.imu_sub, self.height_sub_SYNCED], 10, 0.1, allow_headerless=True)
+        #ts.registerCallback(self.callback)
 
 
 
