@@ -8,7 +8,7 @@ import message_filters
 
 from rospy import Time
 from mav_msgs.msg import RateThrust
-#from sensor_msgs.msg import Range
+from sensor_msgs.msg import Range
 from autonomous_control.msg import *
 from std_msgs.msg import Float64
 
@@ -16,19 +16,20 @@ class autonomous():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
     def __init__(self):
         self.beginning_time = rospy.get_time()
-
+        self.idle_thrust = float(9.81)
         #commented out because it will be moved to the pid node
         #self.path_sub = message_filters.Subscriber('/pathplanning/input/rateThrust', RateThrust)
         #self.imu_sub = message_filters.Subscriber("/uav/sensors/imu", Imu)
         #self.height_sub_SYNCED = message_filters.Subscriber("/uav/sensors/downward_laser_rangefinder", Range)
-        #self.height_sub_UNSYNCED = rospy.Subscriber("/uav/sensors/downward_laser_rangefinder", Range, self.checkHeightCallback)
 
+
+        self.height_sub_UNSYNCED = rospy.Subscriber("/uav/sensors/downward_laser_rangefinder", Range, self.checkHeightCallback)
 
         #these are the subscribers to the pid outputs
-        self.ratethrust_z_sub = message_filters.Subscriber("/pid_nodes/rateThrustZ/control_effort", Float64)
-        self.ratethrust_roll_sub = message_filters.Subscriber("/pid_nodes/rateThrustPitch/control_effort", Float64)
-        self.ratethrust_pitch_sub = message_filters.Subscriber("/pid_nodes/rateThrustRoll/control_effort", Float64)
-        self.ratethrust_yaw_sub = message_filters.Subscriber("/pid_nodes/rateThrustYaw/control_effort", Float64)
+        self.ratethrust_z_sub = message_filters.Subscriber("/rateThrustZ/control_effort", Float64)
+        self.ratethrust_roll_sub = message_filters.Subscriber("/rateThrustPitch/control_effort", Float64)
+        self.ratethrust_pitch_sub = message_filters.Subscriber("/rateThrustRoll/control_effort", Float64)
+        self.ratethrust_yaw_sub = message_filters.Subscriber("/rateThrustYaw/control_effort", Float64)
 
         ts = message_filters.ApproximateTimeSynchronizer([self.ratethrust_z_sub, self.ratethrust_roll_sub, self.ratethrust_pitch_sub, self.ratethrust_yaw_sub], 10, 0.1, allow_headerless=True)
         ts.registerCallback(self.callback)
@@ -45,9 +46,9 @@ class autonomous():
             msg.header.frame_id = "uav/imu"
             msg.header.stamp = Time.now()
             msg.thrust.z = self.idle_thrust + 1;
-            msg.angular_rates.x = 0
-            msg.angular_rates.y = 0
-            msg.angular_rates.z = 0
+            msg.angular_rates.x = 0.1
+            msg.angular_rates.y = 0.1
+            msg.angular_rates.z = 0.1
 
             self.pub_vel.publish(msg)
         else:
@@ -56,6 +57,7 @@ class autonomous():
     def callback(self, pid_z,pid_roll,pid_pitch,pid_yaw):
         print(rospy.get_time())
         msg = RateThrust()
+        print(pid_z,pid_roll,pid_pitch,pid_yaw)
         msg.header.frame_id = "uav/imu"
         msg.header.stamp = Time.now()
         msg.thrust.z = pid_z

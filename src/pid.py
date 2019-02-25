@@ -14,13 +14,32 @@ from std_msgs.msg import Float64
 
 class pid():
     def __init__(self):
-        self.path_sub = message_filters.Subscriber('/pathplanning/input/rateThrust', RateThrust)
-        self.imu_sub = message_filters.Subscriber("/uav/sensors/imu", Imu)
+        self.path_sub = rospy.Subscriber('/pathplanning/input/rateThrust', RateThrust,self.publish_rate_thrust_as_float64)
+        self.imu_sub = rospy.Subscriber("/uav/sensors/imu", Imu, self.publish_imu_as_float64)
 
-        self.pub_z = rospy.Publisher("output/rateThrustZ", Float64, queue_size=2)
-        self.pub_roll = rospy.Publisher("output/rateThrustRoll", Float64, queue_size=2)
-        self.pub_pitch = rospy.Publisher("output/rateThrustPitch", Float64, queue_size=2)
-        self.pub_yaw = rospy.Publisher("output/rateThrustYaw", Float64, queue_size=2)
+        self.path_pub_z = rospy.Publisher("output/pathRateThrustZ", Float64, queue_size=2)
+        self.path_pub_roll = rospy.Publisher("output/pathRateThrustRoll", Float64, queue_size=2)
+        self.path_pub_pitch = rospy.Publisher("output/pathRateThrustPitch", Float64, queue_size=2)
+        self.path_pub_yaw = rospy.Publisher("output/pathRateThrustYaw", Float64, queue_size=2)
+
+        self.imu_pub_z = rospy.Publisher("output/imuRateThrustZ", Float64, queue_size=2)
+        self.imu_pub_roll = rospy.Publisher("output/imuRateThrustRoll", Float64, queue_size=2)
+        self.imu_pub_pitch = rospy.Publisher("output/imuRateThrustPitch", Float64, queue_size=2)
+        self.imu_pub_yaw = rospy.Publisher("output/imuRateThrustYaw", Float64, queue_size=2)
+
+    def publish_rate_thrust_as_float64(self, rate_thrust_msg):
+        self.path_pub_z.publish(rate_thrust_msg.thrust.z)
+        self.path_pub_roll.publish(rate_thrust_msg.angular_rates.x)
+        self.path_pub_pitch.publish(rate_thrust_msg.angular_rates.y)
+        self.path_pub_yaw.publish(rate_thrust_msg.angular_rates.z)
+
+    def publish_imu_as_float64(self, imu_msg):
+        self.imu_pub_z.publish(imu_msg.linear_acceleration.z)
+        self.imu_pub_roll.publish(imu_msg.angular_velocity.x)
+        self.imu_pub_pitch.publish(imu_msg.angular_velocity.y)
+        self.imu_pub_yaw.publish(imu_msg.angular_velocity.z)
+
+
 
 
 if __name__ == '__main__':
