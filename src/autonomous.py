@@ -31,14 +31,15 @@ class autonomous():
         self.ratethrust_pitch_sub = message_filters.Subscriber("/rateThrustRoll/control_effort", Float64)
         self.ratethrust_yaw_sub = message_filters.Subscriber("/rateThrustYaw/control_effort", Float64)
 
+        self.pub_vel = rospy.Publisher('output/rateThrust', RateThrust, queue_size=2)
+
         ts = message_filters.ApproximateTimeSynchronizer([self.ratethrust_z_sub, self.ratethrust_roll_sub, self.ratethrust_pitch_sub, self.ratethrust_yaw_sub], 10, 0.1, allow_headerless=True)
         ts.registerCallback(self.callback)
 
-        self.pub_vel = rospy.Publisher('output/rateThrust', RateThrust, queue_size=2)
 
 
     def checkHeightCallback(self,range):
-        if range.range >= -1.5: #and (rospy.get_time() - self.beginning_time < 10):
+        if range.range >= -1.0: #and (rospy.get_time() - self.beginning_time < 10):
             #In this stage, the imu is not sending out messages yet, so this condition should only happen at the beginning of the track
             #The goal of this conditional is to get the imu to publish a topic, and trigger the message_filter callback below
             print("it is at height range finder")
@@ -46,24 +47,24 @@ class autonomous():
             msg.header.frame_id = "uav/imu"
             msg.header.stamp = Time.now()
             msg.thrust.z = self.idle_thrust + 1;
-            msg.angular_rates.x = 0.1
-            msg.angular_rates.y = 0.1
-            msg.angular_rates.z = 0.1
+            msg.angular_rates.x = 0
+            msg.angular_rates.y = 0
+            msg.angular_rates.z = 0
 
             self.pub_vel.publish(msg)
         else:
             print("it got to here")
 
     def callback(self, pid_z,pid_roll,pid_pitch,pid_yaw):
-        print(rospy.get_time())
+        print("FUCKKKKKKKKKKKKKKK")
         msg = RateThrust()
         print(pid_z,pid_roll,pid_pitch,pid_yaw)
         msg.header.frame_id = "uav/imu"
         msg.header.stamp = Time.now()
-        msg.thrust.z = pid_z
-        msg.angular_rates.x = pid_roll
-        msg.angular_rates.y = pid_pitch
-        msg.angular_rates.z = pid_yaw
+        msg.thrust.z = pid_z.data
+        msg.angular_rates.x = pid_roll.data
+        msg.angular_rates.y = pid_pitch.data
+        msg.angular_rates.z = pid_yaw.data
 
         self.pub_vel.publish(msg)
 
