@@ -42,7 +42,7 @@ class autonomous():
         if range.range >= -1.0: #and (rospy.get_time() - self.beginning_time < 10):
             #In this stage, the imu is not sending out messages yet, so this condition should only happen at the beginning of the track
             #The goal of this conditional is to get the imu to publish a topic, and trigger the message_filter callback below
-            print("it is at height range finder")
+            #print("it is at height range finder")
             msg = RateThrust()
             msg.header.frame_id = "uav/imu"
             msg.header.stamp = Time.now()
@@ -52,13 +52,13 @@ class autonomous():
             msg.angular_rates.z = 0
 
             self.pub_vel.publish(msg)
-        else:
-            print("it got to here")
+        #else:
+            #print("it got to here")
 
     def callback(self, pid_z,pid_roll,pid_pitch,pid_yaw):
-        print("FUCKKKKKKKKKKKKKKK")
+        #print("FUCKKKKKKKKKKKKKKK")
         msg = RateThrust()
-        print(pid_z,pid_roll,pid_pitch,pid_yaw)
+        #print(pid_z,pid_roll,pid_pitch,pid_yaw)
         msg.header.frame_id = "uav/imu"
         msg.header.stamp = Time.now()
         msg.thrust.z = pid_z.data
