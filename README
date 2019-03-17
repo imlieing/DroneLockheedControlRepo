@@ -1,3 +1,13 @@
 We have a custom launch file.
 To use it, add it to the catkin_ws/src/flightoggles/flightgoggles/launch directory
 Then run it with the command roslaunch flightgoggles theAggregate.launch
+
+
+on aws instance
+export ROS_MASTER_URI=http://private_IP_of_AWS:11311
+export ROS_IP=public_IP_of_AWS
+
+on remote machine
+  do hostname -I, the first input matters
+export ROS_MASTER_URI=public_IP_of_AWS
+export ROS_IP=output_of_hostname_-I
