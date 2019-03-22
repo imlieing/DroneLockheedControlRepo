@@ -30,10 +30,7 @@ class autonomous():
         ts.registerCallback(self.callback)
 
     def callback(self,range,pid_z,pid_roll,pid_pitch,pid_yaw):
-        if range.range >= -1.0: #and (rospy.get_time() - self.beginning_time < 10):
-            #In this stage, the imu is not sending out messages yet, so this condition should only happen at the beginning of the track
-            #The goal of this conditional is to get the imu to publish a topic, and trigger the message_filter callback below
-            #print("it is at height range finder")
+        if range.range >= -1.0:
             msg = RateThrust()
             msg.header.frame_id = "uav/imu"
             msg.header.stamp = Time.now()
@@ -45,7 +42,6 @@ class autonomous():
             self.pub_vel.publish(msg)
         else:
             msg = RateThrust()
-            #print(pid_z,pid_roll,pid_pitch,pid_yaw)
             msg.header.frame_id = "uav/imu"
             msg.header.stamp = Time.now()
             msg.thrust.z = pid_z.data
@@ -54,12 +50,6 @@ class autonomous():
             msg.angular_rates.z = pid_yaw.data
 
             self.pub_vel.publish(msg)
-
-    #def subscribe_to_path_and_imu(self):
-        #TO BE REPLACED WITH PATH TOPIC self.path_subscription = rospy.Subscriber("/bounding_box_camera/RGB", Image, process_path)
-
-        #self.path_sub = rospy.Subscriber("TOPIC MADE FOR PATH", Path)
-#path#
 
 if __name__ == '__main__':
     rospy.init_node('autonomous_control')
