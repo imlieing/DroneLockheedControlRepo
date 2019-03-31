@@ -71,23 +71,10 @@
             <node name="imu_and_pathplanning_separator" pkg="autonomous_control" type="pid.py" output="screen">
           </node>
 
-    <!--  <node name="rate_thrust_z" pkg="autonomous_control" type="pid.py" output="screen">
-        <remap from="output/rateThrustZ" to="/control/output/rateThrustZ"/>
-      </node>
-      <node name="angular_rates_roll" pkg="autonomous_control" type="pid.py" output="screen">
-        <remap from="output/rateThrustRoll" to="/control/output/rateThrustYaw"/>
-      </node>
-      <node name="angular_rates_pitch" pkg="autonomous_control" type="pid.py" output="screen">
-        <remap from="output/rateThrustPitch" to="/control/output/rateThrustPitch"/>
-      </node>
-      <node name="angular_rates_yaw" pkg="autonomous_control" type="pid.py" output="screen">
-        <remap from="output/rateThrustYaw" to="/control/output/rateThrustYaw"/>
-      </node> -->
 
     <group ns="/control_nodes">
       <!-- Start autonomous nodes -->
       <node name="autonomous_control" pkg="autonomous_control" type="autonomous.py" output="screen">
-        <!--<rosparam file="$(find universal_teleop)/launch/example_input_map.yml"/>  -->
         <remap from="output/rateThrust" to="/uav/input/rateThrust"/>
       </node>
     </group>

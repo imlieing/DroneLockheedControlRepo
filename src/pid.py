@@ -9,7 +9,7 @@ import message_filters
 
 from mav_msgs.msg import RateThrust
 from sensor_msgs.msg import Imu
-from autonomous_control.msg import *
+
 from std_msgs.msg import Float64
 
 class pid():
