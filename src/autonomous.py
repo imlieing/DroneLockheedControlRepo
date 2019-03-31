@@ -9,7 +9,6 @@ import message_filters
 from rospy import Time
 from mav_msgs.msg import RateThrust
 from sensor_msgs.msg import Range
-from autonomous_control.msg import *
 from std_msgs.msg import Float64
 
 class autonomous():
